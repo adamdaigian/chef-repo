@@ -1,0 +1,16 @@
+{
+  "chef": {
+    "chef_server_url": "https://api.opscode.com/organizations/elasticbox_adam",
+    "validation_client_name": "elasticbox_adam-validator",
+    "validation_key_path": ".chef/elasticbox_adam-validator.pem",
+    "client_key": ".chef/adamdaigian.pem",
+    "node_name": "adamdaigian"
+  },
+  "vagrant": {
+    "vm": {
+      "box": "opscode-ubuntu-12.04-i386",
+      "box_url": "https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04-i386_provisionerless.box",
+      "provision": "chef_client"
+    }
+  }
+}
