@@ -11,10 +11,6 @@ package "apache2" do
 	action :install
 end
 
-service "apache2" do
-	action [:enable, :start]
-end
-
 execute "a2dissite default" do
 	only_if do
 		File.symlink?("/etc/apache2/sites-enabled/000-default")
@@ -25,7 +21,7 @@ end
 node['apache']['sites'].each do |site_name, site_data| 
 	document_root = "/srv/apache/#{site_name}"
 
-	template "#{document_root}"/index.html" do
+	template "/etc/apache2/sites-available/#{site_name}" do
 		source "index.html.erb"
 		variables(
 			:site_name => site_name,
@@ -40,3 +36,22 @@ node['apache']['sites'].each do |site_name, site_data|
 		end
 		notifies :restart, "service[apache2]"
 	end
+
+	directory document_root do
+		mode "0755"
+		recursive true
+	end
+
+	template "#{document_root}/index.html" do
+		source "index.html.erb"
+		variables (
+			:site_name => site_name,
+			:port => site_data['port']
+		)
+		mode "0644"
+	end
+end
+
+service "apache2" do
+  action [:enable, :start]
+end
